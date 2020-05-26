@@ -6,7 +6,39 @@ const secondCardBody = document.querySelectorAll(".card-body")[1];
 const filter = document.querySelector("#filter");
 const clearButton = document.querySelector("#clear-todos");
 
-eventListeners();
+eventListeners(); 
+// addEventListener = belitrilen öğeye olay işleyicisini ekler
+function eventListeners(){
+    form.addEventListener("submit",addTodo);
+    document.addEventListener("DOMContentLoaded",loadAllTodosToUI);
+    secondCardBody.addEventListener("click",deleteToDo);
+    filter.addEventListener("keyup",filterTodos);
+    clearButton.addEventListener("click",clearAllTodos);
+}
+
+function clearAllTodos(e){
+    if(confirm("Tümünü silmek istediğine emin misiniz?")){
+        while(todoList.firstElementChild != null){
+            todoList.removeChild(todoList.firstElementChild);
+        }
+        localStorage.removeItem("todos");
+    }
+}
+
+function filterTodos(e){
+    //geçiyorsa block geçmiyorsa none yapcaz
+    const filterValue=e.target.value.toLowerCase();
+    const listItems=document.querySelectorAll(".list-group-item");
+    listItems.forEach(function(listItem){
+        const text=listItem.textContent.toLowerCase();
+        if(text.indexOf(filterValue)=== -1){
+            listItem.setAttribute("style","display:none !important");
+        }
+        else{
+            listItem.setAttribute("style","display:block");
+        }
+    })
+}
 
 function addTodo(e){
     const newToDo = todoInput.value.trim();
@@ -19,14 +51,11 @@ function addTodo(e){
         addToDoStorage(newToDo);
         showAlert("success","ToDo başarıyla eklendi.");
     }
-    addTodoToUI(newToDo);
-
     e.preventDefault();
 }
 
 function showAlert(type,message){
     const alert=document.createElement("div");
-
     alert.className=`alert alert-${type}`;
     alert.textContent=message;
     firstCardBody.appendChild(alert);
@@ -35,13 +64,6 @@ function showAlert(type,message){
     setTimeout(function(){
         alert.remove();
     },3000);
-
-}
-
-function eventListeners(){
-    form.addEventListener("submit",addTodo);
-    document.addEventListener("DOMContentLoaded",loadAllTodosToUI);
-    secondCardBody.addEventListener("click",deleteToDo);
 }
 
  // string değeri list item olarak UI(arayüzüne) ekleyecek
@@ -55,12 +77,9 @@ function addTodoToUI(newToDo){
    link.href="#";
    link.className="delete-item";
    link.innerHTML="<i class = 'fa fa-remove'></i>";
-
    listItem.className="list-group-item d-flex justify-content-between";
 
-
    // Text Node Ekleme
-
    listItem.appendChild(document.createTextNode(newToDo));
    listItem.appendChild(link);
 
